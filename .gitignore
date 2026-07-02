@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# MLflow / experiment artifacts
+mlruns/
+mlflow.db
+
+# Logs and runtime outputs
+*.log
+api_results.json
+api_test_output.txt
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
