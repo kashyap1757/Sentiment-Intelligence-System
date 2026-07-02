@@ -1,0 +1,118 @@
+timestamp,review,sentiment,confidence,review_length
+2026-02-25T10:07:58.950075,This film was an absolute masterpiece from start to finish!,Positive,0.9655,10
+2026-02-25T10:50:27.237197,"Brilliant performances by the entire cast, truly unforgettable.",Positive,0.9339,8
+2026-02-25T11:43:26.628064,The plot twists kept me on the edge of my seat throughout.,Positive,0.8968,12
+2026-02-25T13:10:43.355288,"One of the best movies I have ever seen, a must watch!",Positive,0.9678,12
+2026-02-25T13:47:58.703170,The cinematography was breathtaking and visually stunning.,Positive,0.9178,7
+2026-02-25T14:42:19.024375,Incredible directing with a powerful emotional storyline.,Positive,0.9447,7
+2026-02-25T16:15:14.574041,The soundtrack perfectly complemented every scene beautifully.,Positive,0.8762,7
+2026-02-25T17:52:06.116936,A heartwarming story with brilliant character development.,Positive,0.9149,7
+2026-02-25T18:32:29.492498,"Loved every minute of it, the acting was phenomenal!",Positive,0.9211,9
+2026-02-25T20:17:31.949272,"The special effects were out of this world, jaw dropping!",Positive,0.876,10
+2026-02-25T21:04:01.294785,This documentary was eye-opening and beautifully produced.,Positive,0.8478,7
+2026-02-25T21:22:11.250602,"The sequel was even better than the original, loved it!",Positive,0.911,10
+2026-02-25T23:21:04.280274,"An emotional rollercoaster that left me in tears, amazing film.",Positive,0.9209,10
+2026-02-26T00:42:34.215059,The script was witty and the dialogue felt natural and engaging.,Positive,0.8593,11
+2026-02-26T01:05:24.326835,"A perfect blend of action and drama, keeps you hooked.",Positive,0.9001,10
+2026-02-26T02:31:39.849565,The director did an outstanding job bringing this story to life.,Positive,0.8949,11
+2026-02-26T03:24:54.166169,This movie deserves every award it has been nominated for.,Positive,0.9662,10
+2026-02-26T04:56:57.291446,Beautiful storytelling with a profound and meaningful message.,Positive,0.8985,8
+2026-02-26T05:04:02.200600,The chemistry between the lead actors was absolutely electric.,Positive,0.8607,9
+2026-02-26T06:50:14.183412,A gripping thriller that never lets up from the opening scene.,Positive,0.9069,11
+2026-02-26T08:29:15.931994,Visually spectacular with a deeply moving narrative arc.,Positive,0.8634,8
+2026-02-26T08:48:26.149188,The child actors in this film were surprisingly impressive.,Positive,0.8445,9
+2026-02-26T10:16:49.955072,"A refreshing take on the genre, original and captivating.",Positive,0.8472,9
+2026-02-26T11:34:34.697954,"The climax was intense and perfectly executed, bravo!",Positive,0.9181,8
+2026-02-26T12:06:30.274634,A feel-good movie that restores your faith in cinema.,Positive,0.8692,9
+2026-02-26T12:35:58.269269,The world-building in this sci-fi epic was extraordinary.,Positive,0.9169,8
+2026-02-26T13:45:47.167981,"Excellent adaptation of the novel, stayed true to the source.",Positive,0.8826,10
+2026-02-26T15:20:52.930254,The humor was spot on without ever feeling forced or cheap.,Positive,0.8312,11
+2026-02-26T16:09:15.741055,A cinematic experience that stays with you long after credits.,Positive,0.8968,10
+2026-02-26T17:25:09.783838,The ensemble cast delivered flawless performances throughout.,Positive,0.9458,7
+2026-02-26T18:21:27.668053,This movie was painfully boring and completely predictable.,Negative,0.0982,8
+2026-02-26T20:24:04.291102,Terrible acting and a nonsensical plot from beginning to end.,Negative,0.0631,10
+2026-02-26T20:27:47.265138,"A complete waste of two hours, the worst film this year.",Negative,0.0436,11
+2026-02-26T22:04:27.036806,"Bad direction, poor script, and unconvincing performances.",Negative,0.1164,7
+2026-02-26T23:31:40.410120,Extremely disappointing sequel that ruined the franchise.,Negative,0.0451,7
+2026-02-26T23:50:40.609923,The plot had so many holes it became unwatchable.,Negative,0.1228,9
+2026-02-27T01:46:53.875480,"Overrated and overhyped, did not live up to the trailer.",Negative,0.1571,10
+2026-02-27T02:58:06.955457,"The pacing was awful, scenes dragged on for too long.",Negative,0.0978,10
+2026-02-27T03:24:26.705024,The CGI looked cheap and took me out of every scene.,Negative,0.072,11
+2026-02-27T05:04:59.828303,None of the characters were likeable or well developed.,Negative,0.1395,9
+2026-02-27T05:31:59.466748,The dialogue was cringeworthy and felt extremely forced.,Negative,0.0943,8
+2026-02-27T07:05:02.245241,A lazy cash grab with zero creativity or originality.,Negative,0.0494,9
+2026-02-27T08:37:49.784658,The ending ruined what could have been a decent film.,Negative,0.137,10
+2026-02-27T09:45:01.998254,Boring storyline with zero tension or emotional depth.,Negative,0.0787,8
+2026-02-27T10:40:11.719518,"The audio mixing was terrible, could barely hear the dialogue.",Negative,0.1059,10
+2026-02-27T10:50:04.750596,"Fell asleep halfway through, says everything about this movie.",Negative,0.0657,9
+2026-02-27T12:35:30.354404,The villain was laughably bad with no real motivation.,Negative,0.1029,9
+2026-02-27T13:50:51.945780,This remake was completely unnecessary and poorly executed.,Negative,0.0307,8
+2026-02-27T14:41:32.675009,Confusing timeline that made the plot impossible to follow.,Negative,0.0767,9
+2026-02-27T15:55:37.080911,The movie relies too heavily on shock value with no substance.,Negative,0.074,11
+2026-02-27T16:03:28.292383,Poorly written characters with no depth or development at all.,Negative,0.0736,10
+2026-02-27T18:05:24.533741,The romantic subplot felt forced and added nothing to the story.,Negative,0.1085,11
+2026-02-27T19:21:14.131412,An absolute disaster from casting to final edit.,Negative,0.045,8
+2026-02-27T19:39:05.272128,Too many unnecessary subplots that went absolutely nowhere.,Negative,0.1277,8
+2026-02-27T21:22:57.964460,The twist ending was obvious from the very first scene.,Negative,0.1487,10
+2026-02-27T22:22:22.446675,Wooden performances from actors I know can do much better.,Negative,0.0907,10
+2026-02-27T23:53:53.203069,"The comedy fell flat, not a single joke landed.",Negative,0.0664,9
+2026-02-28T00:10:13.336442,Overly long runtime with scenes that should have been cut.,Negative,0.1239,10
+2026-02-28T02:06:07.732765,"This horror film was not scary at all, just annoying.",Negative,0.0526,10
+2026-02-28T02:33:31.038900,A forgettable movie that offers nothing new to the genre.,Negative,0.1515,10
+2026-02-28T03:49:47.383453,The movie had its moments but was inconsistent overall.,Negative,0.4161,9
+2026-02-28T05:03:27.015105,Decent acting but the story lacked a clear direction.,Negative,0.3663,9
+2026-02-28T06:40:38.317421,Some good scenes but the pacing really hurt the film.,Negative,0.3732,10
+2026-02-28T07:07:35.336321,Not the worst movie but certainly not worth the hype.,Negative,0.4186,10
+2026-02-28T08:22:53.828877,The first half was great but the second half fell apart.,Negative,0.4397,11
+2026-02-28T08:58:40.792912,Visually impressive but emotionally hollow throughout.,Negative,0.338,6
+2026-02-28T09:54:41.646360,An okay film that could have been much better with editing.,Positive,0.5325,11
+2026-02-28T10:44:14.959561,"Enjoyable popcorn flick, nothing deep but entertaining.",Positive,0.5964,7
+2026-02-28T12:24:34.561215,The lead performance saved an otherwise mediocre script.,Positive,0.535,8
+2026-02-28T13:26:25.806819,A watchable movie but not one I would see again.,Positive,0.5386,10
+2026-03-10T08:10:25.883968,the movie was absolutely amazing,Positive,0.5111,5
+2026-03-10T08:12:03.323983,"bad plot but good ending , had its moment",Negative,0.4556,9
+2026-03-10T08:14:56.406608,"“War Machine” starts like a stereotypical military movie but evolves into something much weirder, perhaps even entertaining at times. A man (Alan Ritchson), grieving the death of his brother after a failed rescue in Afghanistan, enters Ranger Academy to complete his brother’s dream. As part of their training, the recruits who are still standing must survive a practice mission in which their instructors will test their mettle. But during the course of the exercise, the would-be rangers find a robot in the woods – and it is a giant killing machine. Now they have to survive and warn the others about this new threat. 
+
+About a third of the way into the movie, Patrick Hughes’ “War Machine” warps into an entirely different movie, and while the transition is far from seamless—the film’s big narrative surprise is teased rather conspicuously—it’s not without its share of gruesome shock. The melee that follows the killer robot is almost cartoonishly violent, showing broken limbs, plenty of bloody wounds, charred skin, a head blown off, and holes blown through bodies.
+
+The murder bot comes with a number of ominous features to make things even more difficult for the recruits, like scanning for victims before destroying them (although it is convenient the robot’s laser turns from blue to red to signal when it’s set to destroy), scrambling communications, and sending compasses spinning like a top, which becomes the visual equivalent of the water ripples in “Jurassic Park” warning that the big dangerous dino approaches. Indeed, the namesake villain of “War Machine” is something akin to a T. rex, lumbering but deadly, but with an extra knack for stealthily jumping ahead of its victims to pick them off one by one. 
+
+Co-written by Hughes and James Beaufort, the “War Machine” script is somewhat leaden and predictable outside its central twist. It follows many of the stereotypical war-training beats from “Full Metal Jacket,” including one smart-mouthed recruit and one tough drill sergeant who ruthlessly tests his charges. When the story’s dynamics flip into a violent, outer-space-invasion thriller, the movie focuses on the chase, setting up impossible escapes over waterfalls and through a decommissioned tank, letting go of much of the superfluous backstory. Details are a lot less important when being hunted by a machine impervious to bullets. 
+
+Our square-jawed hero, known as 81 (Ritchson)—Ranger trainees are assigned numbers and only called by their numbers—enters the movie as something of a lone wolf, shirking leadership opportunities in favor of quietly proving himself at the back of the class. That’s not the ranger way, but his one last chance to prove himself is how he ends up in the woods, ducking a bloodthirsty machine.
+
+With a long history of action movies and TV shows, Ritchson delivers a perfectly serviceable performance as a man wrestling with his grief and trauma, but he’s also the only one with the experience to keep his ever-shrinking unit moving away from danger. It’s not a memorable performance, but it’s physically demanding and requires a level of stoicism. A stern-faced Esai Morales and grizzled Dennis Quaid bring up the ranks as heads of the Army Ranger Academy, but appear only briefly. 
+
+If anyone is equipped enough to handle killer robots from space, it would be these elite recruits, so while the movie’s “man vs. machine” fight is wildly tipped in favor of the murder bot, it still counts for a fair amount of suspense and physical derring-do. Hughes and cinematographer Aaron Morton find some naturally beautiful moments in the chaos, like following the recruits run through a green forest or hovering over them as the team is swept away from danger by a roaring river. 
+
+In a strange way, “War Machine” kicks off when it proverbially jumps the shark, introducing something so ridiculous as a big killer robot to jolt the movie awake from its ho-hum military recruiting motions. It’s not a movie built to withstand big questions, but for a high-octane action thriller, it’s a lot more fun when it goes off the rails.",Negative,0.1462,669
+2026-03-10T08:15:21.742859,"movie had good plot ,good VFX",Negative,0.4989,6
+2026-03-10T08:15:54.674823,very mediocre script,Negative,0.3177,3
+2026-03-10T08:15:57.301287,very mediocre script,Negative,0.3177,3
+2026-03-10T08:16:13.774083,best script,Negative,0.4581,2
+2026-03-10T08:17:15.988910,very good movie with good plot and script,Positive,0.5045,8
+2026-03-16T13:49:17.379333,this movie was absolutely blockbuster and amazing ,Positive,0.5436,7
+2026-03-16T23:33:35.902886,the movie was amazing and blockbuster,Negative,0.5,6
+2026-03-16T23:34:35.761550,the movie was blockbuster,Negative,0.0,4
+2026-03-16T23:34:59.350136,it was the best movie of all time,Negative,0.5,8
+2026-03-16T23:36:09.804100,the movie was amazing,Negative,0.5,4
+2026-03-16T23:38:01.548313,"Brilliant performances by the entire cast, truly unforgettable",Negative,0.5,8
+2026-03-16T23:40:04.840090,This movie was absolutely fantastic! The acting was superb and the plot was very engaging.,Positive,0.6667,15
+2026-03-16T23:40:04.845080,This was a terrible movie. The plot was boring and the acting was very poor.,Negative,0.0,15
+2026-03-16T23:40:17.446021,This movie was absolutely fantastic! The acting was superb and the plot was very engaging.,Positive,0.6667,15
+2026-03-16T23:40:17.452117,This was a terrible movie. The plot was boring and the acting was very poor.,Negative,0.0,15
+2026-03-16T23:40:28.108347,This movie was absolutely fantastic! The acting was superb and the plot was very engaging.,Positive,0.6667,15
+2026-03-16T23:40:28.113346,This was a terrible movie. The plot was boring and the acting was very poor.,Negative,0.0,15
+2026-03-16T23:40:41.246210,This movie was absolutely fantastic! The acting was superb and the plot was very engaging.,Positive,0.6667,15
+2026-03-16T23:40:41.253282,This was a terrible movie. The plot was boring and the acting was very poor.,Negative,0.0,15
+2026-03-16T23:41:03.672564,This movie was absolutely fantastic! The acting was superb and the plot was very engaging.,Positive,0.6667,15
+2026-03-16T23:41:03.677188,This was a terrible movie. The plot was boring and the acting was very poor.,Negative,0.0,15
+2026-03-16T23:42:03.905760,"Brilliant performances by the entire cast, truly unforgettable",Negative,0.5,8
+2026-03-16T23:42:40.925620,"Brilliant performances by the entire cast, truly unforgettable",Negative,0.5,8
+2026-03-16T23:42:43.097782,"Brilliant performances by the entire cast, truly unforgettable",Negative,0.5,8
+2026-03-16T23:42:43.359559,"Brilliant performances by the entire cast, truly unforgettable",Negative,0.5,8
+2026-03-16T23:42:48.293613,Brilliant performances by the entire cast,Negative,0.5,6
+2026-03-16T23:42:49.649100,Brilliant performances by the entire cast,Negative,0.5,6
+2026-03-16T23:43:05.307911,the movie was amazing and blockbuster,Negative,0.5,6
+2026-03-16T23:43:08.508830,the movie was amazing and blockbuster,Negative,0.5,6
+2026-03-16T23:43:12.859814,the movie was  blockbuster,Negative,0.0,4

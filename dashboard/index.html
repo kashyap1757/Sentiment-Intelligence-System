@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Intelligence Dashboard</title>
+    <meta name="description"
+        content="Interactive Sentiment Analysis Dashboard — LSTM Deep Learning Model with Real-time Monitoring">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #06090f;
+            --bg-secondary: #0c1220;
+            --bg-card: #111a2e;
+            --bg-card-hover: #162040;
+            --bg-input: #0d1526;
+            --border: rgba(99, 102, 241, 0.12);
+            --border-hover: rgba(99, 102, 241, 0.3);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --positive: #22c55e;
+            --positive-bg: rgba(34, 197, 94, 0.1);
+            --negative: #ef4444;
+            --negative-bg: rgba(239, 68, 68, 0.1);
+            --blue: #6366f1;
+            --blue-bg: rgba(99, 102, 241, 0.1);
+            --amber: #f59e0b;
+            --amber-bg: rgba(245, 158, 11, 0.1);
+            --purple: #a855f7;
+            --cyan: #06b6d4;
+            --pink: #ec4899;
+            --gradient-blue: linear-gradient(135deg, #6366f1, #818cf8);
+            --gradient-green: linear-gradient(135deg, #22c55e, #4ade80);
+            --gradient-red: linear-gradient(135deg, #ef4444, #f87171);
+            --gradient-amber: linear-gradient(135deg, #f59e0b, #fbbf24);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --radius-xs: 6px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 15% 50%, rgba(99, 102, 241, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 85% 15%, rgba(168, 85, 247, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 85%, rgba(34, 197, 94, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(6, 9, 15, 0.8);
+            backdrop-filter: blur(24px) saturate(1.4);
+            border-bottom: 1px solid var(--border);
+            padding: 0 28px;
+        }
+
+        .header-inner {
+            max-width: 1480px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: var(--gradient-blue);
+            display: grid;
+            place-items: center;
+            font-size: 20px;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .header-title span {
+            color: var(--blue);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 13px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .status-pill.on {
+            background: var(--positive-bg);
+            color: var(--positive);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .status-pill.off {
+            background: var(--negative-bg);
+            color: var(--negative);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+
+        .status-pill.on .dot {
+            background: var(--positive);
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .btn {
+            padding: 7px 16px;
+            border-radius: var(--radius-xs);
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+        }
+
+        .btn-primary {
+            background: var(--gradient-blue);
+            border: none;
+            color: #fff;
+            box-shadow: 0 3px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        /* ===== MAIN ===== */
+        .main {
+            max-width: 1480px;
+            margin: 0 auto;
+            padding: 24px 28px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== FILTERS / SLICERS ===== */
+        .filters-bar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+            padding: 16px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        .filter-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-right: 4px;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-select {
+            padding: 7px 28px 7px 12px;
+            border-radius: var(--radius-xs);
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2364748b'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            transition: border-color 0.2s;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--blue);
+        }
+
+        .filter-btn-group {
+            display: flex;
+            gap: 0;
+        }
+
+        .filter-btn {
+            padding: 6px 14px;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .filter-btn:first-child {
+            border-radius: var(--radius-xs) 0 0 var(--radius-xs);
+        }
+
+        .filter-btn:last-child {
+            border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+        }
+
+        .filter-btn:not(:first-child) {
+            margin-left: -1px;
+        }
+
+        .filter-btn.active {
+            background: var(--blue-bg);
+            color: var(--blue);
+            border-color: rgba(99, 102, 241, 0.3);
+            z-index: 1;
+            position: relative;
+        }
+
+        .filter-btn:hover:not(.active) {
+            background: var(--bg-card-hover);
+            color: var(--text-secondary);
+        }
+
+        .filter-divider {
+            width: 1px;
+            height: 28px;
+            background: var(--border);
+            margin: 0 4px;
+        }
+
+        .filter-reset {
+            margin-left: auto;
+            padding: 6px 12px;
+            border-radius: var(--radius-xs);
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .filter-reset:hover {
+            color: var(--negative);
+        }
+
+        /* ===== KPI CARDS ===== */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .kpi {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 22px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.25s;
+        }
+
+        .kpi::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+        }
+
+        .kpi:nth-child(1)::after {
+            background: var(--gradient-blue);
+        }
+
+        .kpi:nth-child(2)::after {
+            background: var(--gradient-green);
+        }
+
+        .kpi:nth-child(3)::after {
+            background: var(--gradient-red);
+        }
+
+        .kpi:nth-child(4)::after {
+            background: var(--gradient-amber);
+        }
+
+        .kpi:nth-child(5) {
+            background: var(--bg-card);
+        }
+
+        .kpi:nth-child(5)::after {
+            background: linear-gradient(135deg, var(--purple), var(--pink));
+        }
+
+        .kpi:hover {
+            transform: translateY(-2px);
+            border-color: var(--border-hover);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .kpi-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .kpi-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .kpi-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            font-size: 16px;
+        }
+
+        .kpi:nth-child(1) .kpi-icon {
+            background: var(--blue-bg);
+        }
+
+        .kpi:nth-child(2) .kpi-icon {
+            background: var(--positive-bg);
+        }
+
+        .kpi:nth-child(3) .kpi-icon {
+            background: var(--negative-bg);
+        }
+
+        .kpi:nth-child(4) .kpi-icon {
+            background: var(--amber-bg);
+        }
+
+        .kpi:nth-child(5) .kpi-icon {
+            background: rgba(168, 85, 247, 0.1);
+        }
+
+        .kpi-val {
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        .kpi:nth-child(1) .kpi-val {
+            color: var(--blue);
+        }
+
+        .kpi:nth-child(2) .kpi-val {
+            color: var(--positive);
+        }
+
+        .kpi:nth-child(3) .kpi-val {
+            color: var(--negative);
+        }
+
+        .kpi:nth-child(4) .kpi-val {
+            color: var(--amber);
+        }
+
+        .kpi:nth-child(5) .kpi-val {
+            color: var(--purple);
+        }
+
+        .kpi-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ===== CHART CARD ===== */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px;
+            transition: border-color 0.25s;
+        }
+
+        .card:hover {
+            border-color: var(--border-hover);
+        }
+
+        .card.span-2 {
+            grid-column: span 2;
+        }
+
+        .card-head {
+            margin-bottom: 18px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .chart-wrap {
+            position: relative;
+            width: 100%;
+            height: 280px;
+        }
+
+        .chart-wrap.sm {
+            height: 220px;
+        }
+
+        .chart-wrap.lg {
+            height: 260px;
+        }
+
+        /* ===== GAUGE ===== */
+        .gauge-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 260px;
+        }
+
+        .gauge-svg {
+            width: 220px;
+            height: 130px;
+        }
+
+        .gauge-label {
+            font-size: 36px;
+            font-weight: 900;
+            margin-top: 8px;
+            letter-spacing: -1px;
+        }
+
+        .gauge-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .gauge-legend {
+            display: flex;
+            gap: 16px;
+            margin-top: 14px;
+        }
+
+        .gauge-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .gauge-legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+        }
+
+        /* ===== PREDICT ===== */
+        .predict-card {
+            margin-bottom: 24px;
+        }
+
+        .predict-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .predict-input {
+            flex: 1;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 14px 16px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 13px;
+            resize: vertical;
+            min-height: 70px;
+            transition: border-color 0.2s;
+        }
+
+        .predict-input:focus {
+            outline: none;
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+        }
+
+        .predict-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .result-box {
+            margin-top: 14px;
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            display: none;
+            animation: fadeUp 0.25s ease;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-box.pos {
+            background: var(--positive-bg);
+            border: 1px solid rgba(34, 197, 94, 0.25);
+        }
+
+        .result-box.neg {
+            background: var(--negative-bg);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+
+        .result-emoji {
+            font-size: 24px;
+        }
+
+        .result-text {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .result-box.pos .result-text {
+            color: var(--positive);
+        }
+
+        .result-box.neg .result-text {
+            color: var(--negative);
+        }
+
+        .result-detail {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* ===== WORD CLOUD ===== */
+        .cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            min-height: 200px;
+        }
+
+        .tag {
+            padding: 5px 12px;
+            border-radius: 16px;
+            font-weight: 600;
+            cursor: default;
+            transition: transform 0.15s;
+        }
+
+        .tag:hover {
+            transform: scale(1.12);
+        }
+
+        /* ===== TABLE ===== */
+        .tbl-scroll {
+            overflow-x: auto;
+            margin-top: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            text-align: left;
+            padding: 10px 14px;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        tbody td {
+            padding: 10px 14px;
+            font-size: 12px;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.05);
+            color: var(--text-secondary);
+        }
+
+        tbody tr:hover {
+            background: rgba(99, 102, 241, 0.03);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            border-radius: 14px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .badge.pos {
+            background: var(--positive-bg);
+            color: var(--positive);
+        }
+
+        .badge.neg {
+            background: var(--negative-bg);
+            color: var(--negative);
+        }
+
+        .review-cell {
+            max-width: 320px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .conf-bar {
+            width: 70px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 3px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 6px;
+            overflow: hidden;
+        }
+
+        .conf-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.25);
+            border-radius: 3px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1100px) {
+            .kpi-row {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .kpi-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .card.span-2 {
+                grid-column: span 1;
+            }
+
+            .main {
+                padding: 16px;
+            }
+
+            .filters-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="header-left">
+                <div class="logo">🧠</div>
+                <div class="header-title">Sentiment <span>Intelligence</span></div>
+            </div>
+            <div class="header-right">
+                <div class="status-pill on" id="statusPill">
+                    <div class="dot"></div><span id="statusTxt">API Online</span>
+                </div>
+                <button class="btn" id="refreshBtn" onclick="refresh()"><span id="refIcon">↻</span> Refresh</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <!-- SLICERS / FILTERS BAR -->
+        <div class="filters-bar">
+            <span class="filter-label">Filters</span>
+            <div class="filter-divider"></div>
+
+            <div class="filter-group">
+                <span style="font-size:11px;color:var(--text-muted);font-weight:600;">Sentiment</span>
+                <select class="filter-select" id="filterSentiment" onchange="applyFilters()">
+                    <option value="all">All</option>
+                    <option value="Positive">Positive</option>
+                    <option value="Negative">Negative</option>
+                </select>
+            </div>
+
+            <div class="filter-divider"></div>
+
+            <div class="filter-group">
+                <span style="font-size:11px;color:var(--text-muted);font-weight:600;">Confidence</span>
+                <select class="filter-select" id="filterConfidence" onchange="applyFilters()">
+                    <option value="all">All Levels</option>
+                    <option value="high">High (≥0.8)</option>
+                    <option value="medium">Medium (0.5–0.8)</option>
+                    <option value="low">Low (<0.5)< /option>
+                </select>
+            </div>
+
+            <div class="filter-divider"></div>
+
+            <div class="filter-group">
+                <span style="font-size:11px;color:var(--text-muted);font-weight:600;">Review Length</span>
+                <div class="filter-btn-group">
+                    <button class="filter-btn active" data-len="all" onclick="setLenFilter(this)">All</button>
+                    <button class="filter-btn" data-len="short" onclick="setLenFilter(this)">Short</button>
+                    <button class="filter-btn" data-len="medium" onclick="setLenFilter(this)">Medium</button>
+                    <button class="filter-btn" data-len="long" onclick="setLenFilter(this)">Long</button>
+                </div>
+            </div>
+
+            <button class="filter-reset" onclick="resetFilters()">✕ Reset</button>
+        </div>
+
+        <!-- KPI CARDS -->
+        <div class="kpi-row">
+            <div class="kpi">
+                <div class="kpi-top"><span class="kpi-label">Total Reviews</span>
+                    <div class="kpi-icon">📊</div>
+                </div>
+                <div class="kpi-val" id="kTotal">0</div>
+                <div class="kpi-sub">All analyzed reviews</div>
+            </div>
+            <div class="kpi">
+                <div class="kpi-top"><span class="kpi-label">Positive</span>
+                    <div class="kpi-icon">👍</div>
+                </div>
+                <div class="kpi-val" id="kPos">0</div>
+                <div class="kpi-sub" id="kPosPct">0%</div>
+            </div>
+            <div class="kpi">
+                <div class="kpi-top"><span class="kpi-label">Negative</span>
+                    <div class="kpi-icon">👎</div>
+                </div>
+                <div class="kpi-val" id="kNeg">0</div>
+                <div class="kpi-sub" id="kNegPct">0%</div>
+            </div>
+            <div class="kpi">
+                <div class="kpi-top"><span class="kpi-label">Avg Confidence</span>
+                    <div class="kpi-icon">⚡</div>
+                </div>
+                <div class="kpi-val" id="kConf">0%</div>
+                <div class="kpi-sub">Model certainty</div>
+            </div>
+            <div class="kpi">
+                <div class="kpi-top"><span class="kpi-label">Avg Length</span>
+                    <div class="kpi-icon">📝</div>
+                </div>
+                <div class="kpi-val" id="kLen">0</div>
+                <div class="kpi-sub">Words per review</div>
+            </div>
+        </div>
+
+        <!-- ROW 1: Gauge + Donut + Confidence Histogram -->
+        <div class="grid-3">
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">🎯 Sentiment Health</div>
+                    <div class="card-sub">Positive review percentage (target: 70%)</div>
+                </div>
+                <div class="gauge-container" id="gaugeArea">
+                    <svg class="gauge-svg" viewBox="0 0 220 130">
+                        <path d="M20 120 A90 90 0 0 1 200 120" fill="none" stroke="rgba(255,255,255,0.06)"
+                            stroke-width="18" stroke-linecap="round" />
+                        <path d="M20 120 A90 90 0 0 1 200 120" fill="none" stroke="url(#gaugeGrad)" stroke-width="18"
+                            stroke-linecap="round" id="gaugeArc" stroke-dasharray="0 283" />
+                        <line x1="110" y1="120" x2="110" y2="50" stroke="var(--text-primary)" stroke-width="2.5"
+                            stroke-linecap="round" id="gaugeNeedle" transform="rotate(-90 110 120)" />
+                        <circle cx="110" cy="120" r="5" fill="var(--text-primary)" />
+                        <defs>
+                            <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#ef4444" />
+                                <stop offset="40%" stop-color="#f59e0b" />
+                                <stop offset="100%" stop-color="#22c55e" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="gauge-label" id="gaugeVal">0%</div>
+                    <div class="gauge-sub">Positive Rate</div>
+                    <div class="gauge-legend">
+                        <div class="gauge-legend-item">
+                            <div class="gauge-legend-dot" style="background:#ef4444"></div>Poor (0-40%)
+                        </div>
+                        <div class="gauge-legend-item">
+                            <div class="gauge-legend-dot" style="background:#f59e0b"></div>Average (40-70%)
+                        </div>
+                        <div class="gauge-legend-item">
+                            <div class="gauge-legend-dot" style="background:#22c55e"></div>Good (70-100%)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">🥧 Sentiment Distribution</div>
+                    <div class="card-sub">Positive vs Negative breakdown</div>
+                </div>
+                <div class="chart-wrap"><canvas id="pieChart"></canvas></div>
+            </div>
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">📊 Confidence Histogram</div>
+                    <div class="card-sub">Model confidence score distribution</div>
+                </div>
+                <div class="chart-wrap"><canvas id="histChart"></canvas></div>
+            </div>
+        </div>
+
+        <!-- ROW 2: Trend (full width) -->
+        <div class="grid-2">
+            <div class="card span-2">
+                <div class="card-head">
+                    <div class="card-title">📈 Sentiment Trend Over Time</div>
+                    <div class="card-sub">Average confidence scores with positive/negative lines</div>
+                </div>
+                <div class="chart-wrap lg"><canvas id="trendChart"></canvas></div>
+            </div>
+        </div>
+
+        <!-- ROW 3: Scatter + Bar -->
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">🔬 Confidence vs Review Length</div>
+                    <div class="card-sub">Scatter plot showing correlation between word count and confidence</div>
+                </div>
+                <div class="chart-wrap"><canvas id="scatterChart"></canvas></div>
+            </div>
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">📊 Sentiment by Confidence Level</div>
+                    <div class="card-sub">Positive & negative counts grouped by confidence tier</div>
+                </div>
+                <div class="chart-wrap"><canvas id="barChart"></canvas></div>
+            </div>
+        </div>
+
+        <!-- LIVE PREDICTION -->
+        <div class="card predict-card">
+            <div class="card-head">
+                <div class="card-title">🔍 Live Sentiment Prediction</div>
+                <div class="card-sub">Enter a product or movie review to analyze with the LSTM model (Ctrl+Enter to
+                    submit)</div>
+            </div>
+            <div class="predict-row">
+                <textarea class="predict-input" id="reviewInput"
+                    placeholder="e.g. This product is absolutely amazing! The quality exceeded all my expectations..."></textarea>
+                <button class="btn btn-primary" style="padding:14px 28px;font-size:14px;align-self:flex-end;"
+                    onclick="predict()">Analyze ✨</button>
+            </div>
+            <div class="result-box" id="resultBox">
+                <span class="result-emoji" id="resEmoji"></span>
+                <div>
+                    <div class="result-text" id="resText"></div>
+                    <div class="result-detail" id="resDetail"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ROW 4: Word Cloud + Review Length Chart -->
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">💬 Top Words in Reviews</div>
+                    <div class="card-sub">Most frequent words (stop words removed)</div>
+                </div>
+                <div class="cloud" id="wordCloud"></div>
+            </div>
+            <div class="card">
+                <div class="card-head">
+                    <div class="card-title">📏 Review Length Distribution</div>
+                    <div class="card-sub">Word count breakdown across reviews</div>
+                </div>
+                <div class="chart-wrap sm"><canvas id="lenChart"></canvas></div>
+            </div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="card">
+            <div class="card-head">
+                <div class="card-title">📋 Recent Predictions</div>
+                <div class="card-sub">Latest sentiment analysis results with confidence bars</div>
+            </div>
+            <div class="tbl-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Review</th>
+                            <th>Sentiment</th>
+                            <th>Confidence</th>
+                            <th>Words</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API = window.location.origin;
+        let allData = null;
+        let filteredData = null;
+        let charts = {};
+
+        // Chart.js defaults
+        Chart.defaults.color = '#64748b';
+        Chart.defaults.font.family = "'Inter',sans-serif";
+        Chart.defaults.plugins.legend.labels.usePointStyle = true;
+        Chart.defaults.plugins.legend.labels.pointStyleWidth = 10;
+
+        // ===== INIT CHARTS =====
+        function initCharts() {
+            charts.pie = new Chart(document.getElementById('pieChart'), {
+                type: 'doughnut',
+                data: { labels: ['Positive', 'Negative'], datasets: [{ data: [0, 0], backgroundColor: ['rgba(34,197,94,0.8)', 'rgba(239,68,68,0.8)'], borderColor: ['#22c55e', '#ef4444'], borderWidth: 2, hoverOffset: 8, spacing: 4 }] },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { position: 'bottom', labels: { padding: 16, font: { size: 12, weight: 600 } } }, datalabels: { color: '#fff', font: { weight: 700, size: 13 }, formatter: (v, ctx) => { const t = ctx.dataset.data.reduce((a, b) => a + b, 0); return t ? Math.round(v / t * 100) + '%' : ''; } } } },
+                plugins: [ChartDataLabels]
+            });
+
+            charts.hist = new Chart(document.getElementById('histChart'), {
+                type: 'bar',
+                data: { labels: [], datasets: [{ data: [], borderRadius: 5, barPercentage: 0.85 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { precision: 0 } }, x: { grid: { display: false }, ticks: { font: { size: 9 } } } } }
+            });
+
+            charts.trend = new Chart(document.getElementById('trendChart'), {
+                type: 'line',
+                data: {
+                    labels: [], datasets: [
+                        { label: 'Positive', data: [], borderColor: '#22c55e', backgroundColor: 'rgba(34,197,94,0.06)', fill: true, tension: 0.4, pointRadius: 3, pointHoverRadius: 6, borderWidth: 2 },
+                        { label: 'Negative', data: [], borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.06)', fill: true, tension: 0.4, pointRadius: 3, pointHoverRadius: 6, borderWidth: 2 }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, interaction: { intersect: false, mode: 'index' }, plugins: { legend: { position: 'top', labels: { font: { size: 11 } } }, datalabels: { display: false } }, scales: { y: { min: 0, max: 1, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { callback: v => (v * 100) + '%' } }, x: { grid: { display: false }, ticks: { maxTicksLimit: 12, font: { size: 9 } } } } }
+            });
+
+            charts.scatter = new Chart(document.getElementById('scatterChart'), {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        { label: 'Positive', data: [], backgroundColor: 'rgba(34,197,94,0.6)', pointRadius: 5, pointHoverRadius: 8 },
+                        { label: 'Negative', data: [], backgroundColor: 'rgba(239,68,68,0.6)', pointRadius: 5, pointHoverRadius: 8 }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { font: { size: 11 } } }, datalabels: { display: false } }, scales: { x: { title: { display: true, text: 'Word Count', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.04)' } }, y: { title: { display: true, text: 'Confidence', font: { size: 11 } }, min: 0, max: 1, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { callback: v => (v * 100) + '%' } } } }
+            });
+
+            charts.bar = new Chart(document.getElementById('barChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['High', 'Medium', 'Low'], datasets: [
+                        { label: 'Positive', data: [0, 0, 0], backgroundColor: 'rgba(34,197,94,0.7)', borderRadius: 5 },
+                        { label: 'Negative', data: [0, 0, 0], backgroundColor: 'rgba(239,68,68,0.7)', borderRadius: 5 }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { font: { size: 11 } } }, datalabels: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { precision: 0 } }, x: { grid: { display: false } } } }
+            });
+
+            charts.len = new Chart(document.getElementById('lenChart'), {
+                type: 'bar',
+                data: { labels: [], datasets: [{ data: [], backgroundColor: 'rgba(168,85,247,0.6)', borderColor: 'rgba(168,85,247,1)', borderWidth: 1, borderRadius: 5 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { precision: 0 } }, x: { grid: { display: false } } } }
+            });
+        }
+
+        // ===== FILTERS =====
+        let activeLen = 'all';
+        function setLenFilter(el) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            activeLen = el.dataset.len;
+            applyFilters();
+        }
+        function resetFilters() {
+            document.getElementById('filterSentiment').value = 'all';
+            document.getElementById('filterConfidence').value = 'all';
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.filter-btn[data-len="all"]').classList.add('active');
+            activeLen = 'all';
+            applyFilters();
+        }
+        function applyFilters() {
+            if (!allData || !allData.recent_predictions) return;
+            let data = [...allData.recent_predictions];
+            const sent = document.getElementById('filterSentiment').value;
+            const conf = document.getElementById('filterConfidence').value;
+            if (sent !== 'all') data = data.filter(d => d.sentiment === sent);
+            if (conf === 'high') data = data.filter(d => d.confidence >= 0.8);
+            else if (conf === 'medium') data = data.filter(d => d.confidence >= 0.5 && d.confidence < 0.8);
+            else if (conf === 'low') data = data.filter(d => d.confidence < 0.5);
+            if (activeLen === 'short') data = data.filter(d => d.review_length <= 5);
+            else if (activeLen === 'medium') data = data.filter(d => d.review_length > 5 && d.review_length <= 10);
+            else if (activeLen === 'long') data = data.filter(d => d.review_length > 10);
+            filteredData = data;
+            updateUI(data);
+        }
+
+        // ===== UPDATE UI =====
+        function updateUI(data) {
+            const total = data.length;
+            const pos = data.filter(d => d.sentiment === 'Positive').length;
+            const neg = data.filter(d => d.sentiment === 'Negative').length;
+            const avgConf = total ? data.reduce((s, d) => s + d.confidence, 0) / total : 0;
+            const avgLen = total ? data.reduce((s, d) => s + (d.review_length || 0), 0) / total : 0;
+            const posPct = total ? (pos / total * 100) : 0;
+
+            // KPIs
+            animVal('kTotal', total);
+            animVal('kPos', pos);
+            animVal('kNeg', neg);
+            document.getElementById('kConf').textContent = (avgConf * 100).toFixed(1) + '%';
+            document.getElementById('kLen').textContent = avgLen.toFixed(0);
+            document.getElementById('kPosPct').textContent = posPct.toFixed(1) + '% of total';
+            document.getElementById('kNegPct').textContent = (total ? neg / total * 100 : 0).toFixed(1) + '% of total';
+
+            // Gauge
+            updateGauge(posPct);
+
+            // Pie
+            charts.pie.data.datasets[0].data = [pos, neg];
+            charts.pie.update('none');
+
+            // Confidence histogram
+            const bins = { '0.0-0.1': 0, '0.1-0.2': 0, '0.2-0.3': 0, '0.3-0.4': 0, '0.4-0.5': 0, '0.5-0.6': 0, '0.6-0.7': 0, '0.7-0.8': 0, '0.8-0.9': 0, '0.9-1.0': 0 };
+            data.forEach(d => {
+                const c = d.confidence;
+                if (c < 0.1) bins['0.0-0.1']++; else if (c < 0.2) bins['0.1-0.2']++; else if (c < 0.3) bins['0.2-0.3']++;
+                else if (c < 0.4) bins['0.3-0.4']++; else if (c < 0.5) bins['0.4-0.5']++; else if (c < 0.6) bins['0.5-0.6']++;
+                else if (c < 0.7) bins['0.6-0.7']++; else if (c < 0.8) bins['0.7-0.8']++; else if (c < 0.9) bins['0.8-0.9']++;
+                else bins['0.9-1.0']++;
+            });
+            const bKeys = Object.keys(bins), bVals = Object.values(bins);
+            charts.hist.data.labels = bKeys;
+            charts.hist.data.datasets[0].data = bVals;
+            charts.hist.data.datasets[0].backgroundColor = bKeys.map((_, i) => {
+                const r = i / (bKeys.length - 1);
+                return `rgba(${Math.round(239 - r * 205)},${Math.round(68 + r * 129)},${Math.round(68 + r * 26)},0.7)`;
+            });
+            charts.hist.update('none');
+
+            // Trend — group by date
+            const byDate = {};
+            data.forEach(d => {
+                const dt = d.timestamp ? d.timestamp.substring(0, 10) : 'unknown';
+                if (!byDate[dt]) byDate[dt] = { pos: [], neg: [] };
+                if (d.sentiment === 'Positive') byDate[dt].pos.push(d.confidence);
+                else byDate[dt].neg.push(d.confidence);
+            });
+            const dates = Object.keys(byDate).sort();
+            charts.trend.data.labels = dates;
+            charts.trend.data.datasets[0].data = dates.map(dt => byDate[dt].pos.length ? byDate[dt].pos.reduce((a, b) => a + b, 0) / byDate[dt].pos.length : null);
+            charts.trend.data.datasets[1].data = dates.map(dt => byDate[dt].neg.length ? byDate[dt].neg.reduce((a, b) => a + b, 0) / byDate[dt].neg.length : null);
+            charts.trend.update('none');
+
+            // Scatter
+            charts.scatter.data.datasets[0].data = data.filter(d => d.sentiment === 'Positive').map(d => ({ x: d.review_length, y: d.confidence }));
+            charts.scatter.data.datasets[1].data = data.filter(d => d.sentiment === 'Negative').map(d => ({ x: d.review_length, y: d.confidence }));
+            charts.scatter.update('none');
+
+            // Bar (sentiment by confidence tier)
+            const tiers = { High: { pos: 0, neg: 0 }, Medium: { pos: 0, neg: 0 }, Low: { pos: 0, neg: 0 } };
+            data.forEach(d => {
+                const tier = d.confidence >= 0.8 ? 'High' : d.confidence >= 0.5 ? 'Medium' : 'Low';
+                if (d.sentiment === 'Positive') tiers[tier].pos++; else tiers[tier].neg++;
+            });
+            charts.bar.data.datasets[0].data = [tiers.High.pos, tiers.Medium.pos, tiers.Low.pos];
+            charts.bar.data.datasets[1].data = [tiers.High.neg, tiers.Medium.neg, tiers.Low.neg];
+            charts.bar.update('none');
+
+            // Review length chart
+            const lenBins = {};
+            data.forEach(d => {
+                const b = Math.floor((d.review_length || 0) / 3) * 3;
+                const label = `${b}-${b + 2}`;
+                lenBins[label] = (lenBins[label] || 0) + 1;
+            });
+            charts.len.data.labels = Object.keys(lenBins);
+            charts.len.data.datasets[0].data = Object.values(lenBins);
+            charts.len.update('none');
+
+            // Word cloud
+            if (allData.word_frequency) renderCloud(allData.word_frequency);
+
+            // Table
+            renderTable(data);
+        }
+
+        // ===== GAUGE =====
+        function updateGauge(pct) {
+            const arcLen = 283;
+            const fill = (pct / 100) * arcLen;
+            document.getElementById('gaugeArc').setAttribute('stroke-dasharray', `${fill} ${arcLen}`);
+            const angle = -90 + (pct / 100) * 180;
+            document.getElementById('gaugeNeedle').setAttribute('transform', `rotate(${angle} 110 120)`);
+            const el = document.getElementById('gaugeVal');
+            el.textContent = pct.toFixed(1) + '%';
+            el.style.color = pct >= 70 ? 'var(--positive)' : pct >= 40 ? 'var(--amber)' : 'var(--negative)';
+        }
+
+        // ===== ANIMATE VALUE =====
+        function animVal(id, end) {
+            const el = document.getElementById(id);
+            const start = parseInt(el.textContent) || 0;
+            if (start === end) { el.textContent = end; return; }
+            const dur = 500, range = end - start, t0 = performance.now();
+            function tick(t) {
+                const p = Math.min((t - t0) / dur, 1);
+                el.textContent = Math.round(start + range * (1 - Math.pow(1 - p, 3)));
+                if (p < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        }
+
+        // ===== WORD CLOUD =====
+        function renderCloud(words) {
+            const el = document.getElementById('wordCloud');
+            el.innerHTML = '';
+            const max = Math.max(...words.map(w => w.count), 1);
+            const colors = ['#6366f1', '#8b5cf6', '#a855f7', '#22c55e', '#14b8a6', '#f59e0b', '#ef4444', '#ec4899', '#06b6d4', '#84cc16'];
+            words.slice(0, 25).forEach((w, i) => {
+                const tag = document.createElement('span');
+                tag.className = 'tag';
+                tag.textContent = w.word;
+                const ratio = w.count / max, sz = 10 + ratio * 14, c = colors[i % colors.length];
+                tag.style.cssText = `font-size:${sz}px;color:${c};background:${c}15;border:1px solid ${c}30;`;
+                tag.title = `${w.word}: ${w.count}`;
+                el.appendChild(tag);
+            });
+        }
+
+        // ===== TABLE =====
+        function renderTable(data) {
+            const tb = document.getElementById('tblBody');
+            tb.innerHTML = '';
+            [...data].reverse().slice(0, 25).forEach(p => {
+                const c = p.confidence || 0, cc = c > 0.5 ? '#22c55e' : '#ef4444', sc = (p.sentiment || '').toLowerCase();
+                const ts = p.timestamp ? new Date(p.timestamp).toLocaleString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
+                tb.innerHTML += `<tr>
+            <td style="white-space:nowrap">${ts}</td>
+            <td class="review-cell" title="${(p.review || '').replace(/"/g, '&quot;')}">${p.review || ''}</td>
+            <td><span class="badge ${sc === 'positive' ? 'pos' : 'neg'}">${sc === 'positive' ? '👍' : '👎'} ${p.sentiment}</span></td>
+            <td>${(c * 100).toFixed(1)}%<span class="conf-bar"><span class="conf-fill" style="width:${c * 100}%;background:${cc}"></span></span></td>
+            <td>${p.review_length || '—'}</td></tr>`;
+            });
+        }
+
+        // ===== FORMAT TIMESTAMP =====
+        function fmtTs(ts) { if (!ts) return '—'; return new Date(ts).toLocaleString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+
+        // ===== PREDICT =====
+        async function predict() {
+            const input = document.getElementById('reviewInput');
+            const txt = input.value.trim();
+            if (!txt) { input.focus(); return; }
+            try {
+                const res = await fetch(`${API}/predict`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ review: txt }) });
+                const d = await res.json();
+                const box = document.getElementById('resultBox');
+                box.style.display = 'flex';
+                box.className = `result-box ${d.sentiment === 'Positive' ? 'pos' : 'neg'}`;
+                document.getElementById('resEmoji').textContent = d.sentiment === 'Positive' ? '😊' : '😞';
+                document.getElementById('resText').textContent = d.sentiment + ' Sentiment';
+                document.getElementById('resDetail').textContent = `Confidence: ${(d.confidence * 100).toFixed(1)}% · Latency: ${d.latency_ms}ms · Words: ${d.review_length}`;
+                setTimeout(() => refresh(), 400);
+            } catch (e) { alert('API not reachable. Start it with: python api/app.py'); }
+        }
+
+        // ===== STATUS =====
+        async function checkStatus() {
+            try {
+                const r = await fetch(`${API}/health`, { signal: AbortSignal.timeout(4000) });
+                const d = await r.json();
+                document.getElementById('statusPill').className = 'status-pill on';
+                document.getElementById('statusTxt').textContent = d.model_status === 'healthy' ? 'Model Active' : 'API Online';
+            } catch (e) {
+                document.getElementById('statusPill').className = 'status-pill off';
+                document.getElementById('statusTxt').textContent = 'API Offline';
+            }
+        }
+
+        // ===== REFRESH =====
+        async function refresh() {
+            const btn = document.getElementById('refreshBtn');
+            btn.style.opacity = '0.6';
+            document.getElementById('refIcon').style.animation = 'spin 0.6s linear infinite';
+            try {
+                const r = await fetch(`${API}/analytics/summary`, { signal: AbortSignal.timeout(8000) });
+                allData = await r.json();
+                // Add all predictions as recent_predictions if not enough
+                if (allData.recent_predictions && allData.recent_predictions.length < allData.total_predictions) {
+                    try {
+                        const r2 = await fetch(`${API}/predictions?limit=500`);
+                        const preds = await r2.json();
+                        if (preds.length > allData.recent_predictions.length) allData.recent_predictions = preds;
+                    } catch (e) { }
+                }
+                applyFilters();
+            } catch (e) { console.error(e); }
+            btn.style.opacity = '1';
+            document.getElementById('refIcon').style.animation = '';
+        }
+
+        // ===== KEYBOARD =====
+        document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.ctrlKey) predict(); });
+
+        // ===== CSS ANIMATION =====
+        const style = document.createElement('style');
+        style.textContent = '@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}';
+        document.head.appendChild(style);
+
+        // ===== BOOT =====
+        window.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            checkStatus();
+            refresh();
+            setInterval(refresh, 30000);
+            setInterval(checkStatus, 15000);
+        });
+    </script>
+</body>
+
+</html>
